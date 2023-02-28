@@ -36,8 +36,27 @@ FpsLabel.Position = UDim2.fromOffset(15, 20)
 FpsLabel.Text = "Fps: 1/s"
 FpsLabel.Parent = game:GetService("CoreGui").RobloxGui
 
-RunService.RenderStepped:Connect(function()
-    task.wait(1)
-    PingLabel.Text = "Ping: " .. math.floor(tonumber(Stats:FindFirstChild("PerformanceStats").Ping:GetValue())) .. "ms"
-    FpsLabel.Text = "Fps: " .. math.floor(tonumber(1 / RunService.RenderStepped:Wait())) .. "/s"
+task.spawn(function()
+    RunService.RenderStepped:Connect(function()
+        task.wait(1)
+        PingLabel.Text = "Ping: " .. math.floor(tonumber(Stats:FindFirstChild("PerformanceStats").Ping:GetValue())) .. "ms"
+    end)
+end)
+
+-- https://devforum.roblox.com/t/get-client-fps-trough-a-script/282631/14
+local LastIteration, Start
+local FrameUpdateTable = {}
+
+Start = time()
+task.spawn(function()
+    RunService.Heartbeat:Connect(function()
+        LastIteration = time()
+
+        for Index = #FrameUpdateTable, 1, -1 do
+            FrameUpdateTable[Index + 1] = FrameUpdateTable[Index] >= LastIteration - 1 and FrameUpdateTable[Index] or nil
+        end
+
+        FrameUpdateTable[1] = LastIteration
+        FpsLabel.Text = "Fps: " .. tostring(math.floor(time() - Start >= 1 and #FrameUpdateTable or #FrameUpdateTable / (time() - Start))) .. "/s"
+    end)
 end)
