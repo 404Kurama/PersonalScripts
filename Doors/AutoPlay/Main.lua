@@ -102,6 +102,16 @@ end
 
 if game.PlaceId == 6516141723 then
     for _, Elevator in next, workspace.Lobby.LobbyElevators:GetChildren() do
-        
+        local Hitbox = Elevator:FindFirstChild("DoorHitbox")
+        if Hitbox then
+            local Gui = Hitbox:FindFirstChild("BillboardGui")
+            local Title = Gui.Title
+            local Players = string.split(Title.Text, " / ")
+
+            if tonumber(Players[1]) <= (tonumber(Players[2]) - 1) then
+                Api.MoveTo(Hitbox)
+                break
+            end
+        end
     end
 end
