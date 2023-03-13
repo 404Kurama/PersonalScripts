@@ -11,37 +11,21 @@ if game:GetService("CoreGui").RobloxGui:FindFirstChild("15875ed6218f8d05d0924dcb
     game:GetService("CoreGui").RobloxGui:FindFirstChild("15875ed6218f8d05d0924dcbbb1bdd7bb40d263cee8bf3ed06f9855c04638b4e"):Destroy()
 end
 
-if game:GetService("CoreGui").RobloxGui:FindFirstChild("05b9fe6f356a4c18032b9e75760cf8637fa2ba253f45326291e3c53718efa55f") then
-    game:GetService("CoreGui").RobloxGui:FindFirstChild("05b9fe6f356a4c18032b9e75760cf8637fa2ba253f45326291e3c53718efa55f"):Destroy()
-end
-
-local PingLabel = Instance.new("TextLabel")
-PingLabel.Name = "15875ed6218f8d05d0924dcbbb1bdd7bb40d263cee8bf3ed06f9855c04638b4e"
-PingLabel.BackgroundTransparency = 1
-PingLabel.BorderSizePixel = 0
-PingLabel.Position = UDim2.fromOffset(15, 0)
-PingLabel.Size = UDim2.fromOffset(200, 20)
-PingLabel.TextColor3 = Color3.new(1, 1, 1)
-PingLabel.TextSize = 20
-PingLabel.TextStrokeColor3 = Color3.fromRGB(61, 61, 61)
-PingLabel.TextStrokeTransparency = 0
-PingLabel.TextXAlignment = Enum.TextXAlignment.Left
-PingLabel.Font = Enum.Font.Cartoon
-PingLabel.Text = "Ping: 1ms"
-PingLabel.Parent = game:GetService("CoreGui").RobloxGui
-
-local FpsLabel = PingLabel:Clone()
-FpsLabel.Name = "05b9fe6f356a4c18032b9e75760cf8637fa2ba253f45326291e3c53718efa55f"
-FpsLabel.Position = UDim2.fromOffset(15, 20)
-FpsLabel.Text = "Fps: 1/s"
-FpsLabel.Parent = game:GetService("CoreGui").RobloxGui
-
-task.spawn(function()
-    RunService.RenderStepped:Connect(function()
-        task.wait(1)
-        PingLabel.Text = "Ping: " .. math.floor(tonumber(Stats:FindFirstChild("PerformanceStats").Ping:GetValue())) .. "ms"
-    end)
-end)
+local Label = Instance.new("TextLabel")
+Label.Name = "15875ed6218f8d05d0924dcbbb1bdd7bb40d263cee8bf3ed06f9855c04638b4e"
+Label.BackgroundTransparency = 1
+Label.BorderSizePixel = 0
+Label.AnchorPoint = Vector2.new(1, 0)
+Label.Position = UDim2.new(1, -10, 0, 10)
+Label.Size = UDim2.fromOffset(200, 20)
+Label.TextColor3 = Color3.new(1, 1, 1)
+Label.TextSize = 20
+Label.TextStrokeColor3 = Color3.fromRGB(61, 61, 61)
+Label.TextStrokeTransparency = 0
+Label.TextXAlignment = Enum.TextXAlignment.Right
+Label.Font = Enum.Font.Cartoon
+Label.Text = "Ping: 1ms"
+Label.Parent = game:GetService("CoreGui").RobloxGui
 
 -- https://devforum.roblox.com/t/get-client-fps-trough-a-script/282631/14
 local LastIteration, Start
@@ -57,6 +41,9 @@ task.spawn(function()
         end
 
         FrameUpdateTable[1] = LastIteration
-        FpsLabel.Text = "Fps: " .. tostring(math.floor(time() - Start >= 1 and #FrameUpdateTable or #FrameUpdateTable / (time() - Start))) .. "/s"
+
+        local Ping = "Ping: " .. math.floor(tonumber(Stats:FindFirstChild("PerformanceStats").Ping:GetValue())) .. "ms"
+        local Fps = "Fps: " .. tostring(math.floor(time() - Start >= 1 and #FrameUpdateTable or #FrameUpdateTable / (time() - Start))) .. "/s"
+        Label.Text = Ping .. " | " .. Fps
     end)
 end)
